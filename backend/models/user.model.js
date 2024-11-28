@@ -28,6 +28,9 @@ const UserSchema = new mongoose.UserSchema({
         bio: {
             type: String
         },
+        location: {
+            type: String
+        },
         skills: [{
             type: String
         }],
@@ -41,6 +44,9 @@ const UserSchema = new mongoose.UserSchema({
             type: String
         },
         resumeOriginalName: {
+            type: String
+        },
+        github: {
             type: String
         },
         company:{
