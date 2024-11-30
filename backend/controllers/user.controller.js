@@ -1,8 +1,9 @@
-const {User} = require('../models/user.model.js');
+const User = require('../models/user.model.js');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 
-export const registerUser = async (req,res) =>{
+const registerUser = async (req,res) =>{
+    console.log('register route')
     const {name, email,phone,  password , role } = req.body;
 
     if(!name || !email || !phone || !password || !role){
@@ -28,7 +29,7 @@ export const registerUser = async (req,res) =>{
     }
 }
 
-export const loginUser = async (req,res) => {
+const loginUser = async (req,res) => {
     const {email, password,role} = req.body;
     if(!email || !password || !role){
         return res.status(400).json({success: false, message: "Please fill all the fields"});
@@ -78,7 +79,7 @@ export const loginUser = async (req,res) => {
     }
 }
 
-export const logout = async (req, res) => {
+ const logout = async (req, res) => {
     try{
         res.clearCookie('token', { path: '/' });
         res.json({success: true, message: "User logged out successfully"});
@@ -89,42 +90,50 @@ export const logout = async (req, res) => {
 
 }
 
-export const updateprofile = async (req, res) => {
-    try{
-        const user = await User.findById(req.user.id);
-        const file = req.file;
-        if(!user){
-            return res.status(400).json({success: false, message: "User not found"});
+const updateprofile = async (req, res) => {
+    try {
+        const user = await User.findById(req.user);  // Assuming user.id is being passed from the authentication middleware
+       // console.log(req.user,user) ;
+        console.log(req.body) ;
+        if (!user) {
+            return res.status(400).json({ success: false, message: "User not found" });
         }
-        const skillsupdated= req.body.skills.split(',');
 
+        const skillsupdated = req.body.skills.split(',');
+
+        // Updating the user profile
         user.name = req.body.name || user.name;
         user.email = req.body.email || user.email;
         user.phone = req.body.phone || user.phone;
-        user.profile[bio] = req.body.bio || user.profile.bio;
-        user.profile[location] = req.body.location || user.profile.location;
-        user.profile[skills] = skillsupdated || user.profile.skills;
-        user.profile[experience] = req.body.experience || user.profile.experience;
-        user.profile[education] = req.body.education || user.profile.education;
-        user.profile[resume] = req.body.resume || user.profile.resume;
-        user.profile[github] = req.body.github || user.profile.github;
-        user.profile[profilePhoto] = req.body.profilePhoto || user.profile.profilePhoto;
+        user.profile.bio = req.body.bio || user.profile.bio;  // Fixed: Accessing profile fields correctly
+        user.profile.location = req.body.location || user.profile.location;
+        user.profile.skills = skillsupdated || user.profile.skills;  // Fixed: Updating array properly
+        user.profile.experience = req.body.experience || user.profile.experience;
+        user.profile.education = req.body.education || user.profile.education;
+        user.profile.resume = req.body.resume || user.profile.resume;
+        user.profile.github = req.body.github || user.profile.github;
+        user.profile.profilePhoto = req.body.profilePhoto || user.profile.profilePhoto;
 
-        let user1 = {
+        await user.save();
+        console.log("dfsdfsdfsdfuser") ;
+
+        // Returning updated user profile in the response
+        const updatedUser = {
             _id: user._id,
             name: user.name,
             email: user.email,
             phone: user.phone,
             role: user.role,
             profile: user.profile
-        }
+        };
 
-        await user.save();
+        res.json({ success: true, user: updatedUser, message: "Profile updated successfully" });
 
-        res.json({success: true,user1, message: "Profile updated successfully"});
-    }catch (error) {
+    } catch (error) {
         console.log(error);
-        res.status(500).json({success: false, message: "Server error"});
+        res.status(500).json({ success: false, message: "Server error" });
     }
+};
 
-}
+
+module.exports = {registerUser, loginUser, logout, updateprofile};
