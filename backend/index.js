@@ -5,6 +5,7 @@ const cors= require('cors');
 const connectDB = require('./config/db');
 const userroute = require('./routes/user.route');
 const companyroute = require('./routes/company.route');
+const jobRoute = require('./routes/job.route');
 
 const app = express();
 
@@ -22,6 +23,7 @@ app.use(cors());
 
 app.use("/user",userroute);
 app.use("/company",companyroute);
+app.use("/job",jobRoute);
 
 app.listen(port, () => {
     connectDB();
