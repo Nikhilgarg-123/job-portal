@@ -4,6 +4,7 @@ const cookieParser = require('cookie-parser');
 const cors= require('cors');
 const connectDB = require('./config/db');
 const userroute = require('./routes/user.route');
+const companyroute = require('./routes/company.route');
 
 const app = express();
 
@@ -19,7 +20,8 @@ app.use(cookieParser());
 app.use(cors());
 
 
-app.use("/",userroute);
+app.use("/user",userroute);
+app.use("/company",companyroute);
 
 app.listen(port, () => {
     connectDB();

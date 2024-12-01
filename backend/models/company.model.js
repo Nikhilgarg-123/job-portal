@@ -1,13 +1,16 @@
 const mongoose = require('mongoose');
 
-const ConpanySchema = new mongoose.Schema({
+const CompanySchema = new mongoose.Schema({
     name: {
         type: String,
-        required: true
+        required: true,
+        unique: true
     },
     website: {
-        type: String,
-        unique: true
+        type: String,        
+        unique: true,
+        sparse: true
+
     },
     location: {
         type: String,

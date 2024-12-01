@@ -13,6 +13,7 @@ const isauthenticated = async (req, res, next) => {
         }
         req.user = decoded.id;
         console.log(JSON.stringify(req.user));
+
         next();
     } catch (error) {
         console.log(error);

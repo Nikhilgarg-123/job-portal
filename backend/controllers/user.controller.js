@@ -105,6 +105,7 @@ const updateprofile = async (req, res) => {
         user.name = req.body.name || user.name;
         user.email = req.body.email || user.email;
         user.phone = req.body.phone || user.phone;
+        user.role = req.body.role || user.role;
         user.profile.bio = req.body.bio || user.profile.bio;  // Fixed: Accessing profile fields correctly
         user.profile.location = req.body.location || user.profile.location;
         user.profile.skills = skillsupdated || user.profile.skills;  // Fixed: Updating array properly
